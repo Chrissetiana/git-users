@@ -1,4 +1,4 @@
-package com.chrissetiana.gitrepo;
+package com.chrissetiana.gitsearch;
 
 import org.junit.Test;
 
