@@ -1,3 +1,22 @@
 <resources>
-    <string name="app_name">Git Repo</string>
+    <string name="app_name">Git Search</string>
+
+    <string name="hint_search">Enter username</string>
+    <string name="hint_name">username</string>
+    <string name="hint_bio">Lorem ipsum dolor sit amet, consectetur adipiscing</string>
+    <string name="hint_repo">14</string>
+    <string name="hint_gist">7</string>
+    <string name="hint_followers">13</string>
+    <string name="hint_following">15</string>
+
+    <string name="label_repo">Repositories</string>
+    <string name="label_gist">Gists</string>
+    <string name="label_followers">Followers</string>
+    <string name="label_following">Following</string>
+
+    <string name="btn_desc">Search</string>
+    <string name="img_desc">user image</string>
+
+    <string name="no_result">No data found.</string>
+    <string name="no_conn">No internet connection.</string>
 </resources>

@@ -1,0 +1,5 @@
+<resources>
+    <dimen name="outer">16dp</dimen>
+    <dimen name="inner">8dp</dimen>
+    <dimen name="nonexistent">0dp</dimen>
+</resources>
