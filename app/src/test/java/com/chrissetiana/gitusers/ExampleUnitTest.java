@@ -1,4 +1,4 @@
-package com.chrissetiana.gitsearch;
+package com.chrissetiana.gitusers;
 
 import org.junit.Test;
 
