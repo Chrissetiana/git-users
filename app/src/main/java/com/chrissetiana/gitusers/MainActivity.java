@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     UserAdapter adapter;
-    private String source = "https://api.github.com/users/chrissetiana";
+    private String source = "https://api.github.com/users/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    class UserAsyncTask extends AsyncTask<String, Void, UserActivity> {
+    private class UserAsyncTask extends AsyncTask<String, Void, UserActivity> {
 
         @Override
         protected UserActivity doInBackground(String... strings) {

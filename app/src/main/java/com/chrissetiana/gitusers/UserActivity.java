@@ -13,11 +13,11 @@ public class UserActivity extends ArrayList {
     private int ufollowers; // followers#
     private int ufollowing; // following#
     // https://api.github.com/users/chrissetiana/repos
-    private String repoName;  // repo full_name"" (e.g. chrissetiana/acdss_ || name"" (e.g. acdss)
-    private String repoLanguage; // language language""
-    private String repoLink; // url html_url""
+    private String repoName;  // full_name"" (e.g. chrissetiana/acdss_ || name"" (e.g. acdss)
+    private String repoLanguage; // language""
+    private String repoLink; // html_url""
 
-    public UserActivity(String userimage, String username, String bio, int repo, int gist, int ufollowers, int ufollowing) {
+    UserActivity(String userimage, String username, String bio, int repo, int gist, int ufollowers, int ufollowing) {
         this.userimage = userimage;
         this.username = username;
         this.bio = bio;
