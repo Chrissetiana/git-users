@@ -4,18 +4,20 @@ import java.util.ArrayList;
 
 public class UserActivity extends ArrayList {
 
-    private String userimage; // img avatar_url""
-    private String username; // name name""
-    private String bio; // bio bio""
-    private int repo; // repositories public_repos# -> url html_url""
-    private int gist; // gists public_gists# -> https://gist.github.com/
-    private int ufollowers; // followers followers#
-    private int ufollowing; // following following#
+    // https://api.github.com/users/chrissetiana
+    private String userimage; // avatar_url""
+    private String username; // name""
+    private String bio; // bio""
+    private int repo; // public_repos#
+    private int gist; // public_gists#
+    private int ufollowers; // followers#
+    private int ufollowing; // following#
+    // https://api.github.com/users/chrissetiana/repos
     private String repoName;  // repo full_name"" (e.g. chrissetiana/acdss_ || name"" (e.g. acdss)
     private String repoLanguage; // language language""
-    private String repoLink; // https://api.github.com/users/chrissetiana/repos
+    private String repoLink; // url html_url""
 
-    UserActivity(String userimage, String username, String bio, int repo, int gist, int ufollowers, int ufollowing, String repoName, String repoLanguage, String repoLink) {
+    public UserActivity(String userimage, String username, String bio, int repo, int gist, int ufollowers, int ufollowing) {
         this.userimage = userimage;
         this.username = username;
         this.bio = bio;
@@ -23,6 +25,9 @@ public class UserActivity extends ArrayList {
         this.gist = gist;
         this.ufollowers = ufollowers;
         this.ufollowing = ufollowing;
+    }
+
+    public UserActivity(String repoName, String repoLanguage, String repoLink) {
         this.repoName = repoName;
         this.repoLanguage = repoLanguage;
         this.repoLink = repoLink;
