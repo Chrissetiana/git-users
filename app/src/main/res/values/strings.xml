@@ -9,10 +9,10 @@
     <string name="hint_followers">13</string>
     <string name="hint_following">15</string>
 
-    <string name="label_repo">Repositories</string>
-    <string name="label_gist">Gists</string>
-    <string name="label_followers">Followers</string>
-    <string name="label_following">Following</string>
+    <string name="label_repo">Repositories:</string>
+    <string name="label_gist">Gists:</string>
+    <string name="label_followers">Followers:</string>
+    <string name="label_following">Following:</string>
 
     <string name="btn_desc">Search</string>
     <string name="img_desc">user image</string>
