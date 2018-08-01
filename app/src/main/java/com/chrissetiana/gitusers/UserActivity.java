@@ -1,37 +1,21 @@
 package com.chrissetiana.gitusers;
 
-public class UserActivity {
+import java.util.ArrayList;
 
-    /*
-https://api.github.com/users/chrissetiana
+public class UserActivity extends ArrayList {
 
-img avatar_url""
-name name""
-bio bio""
-repositories public_repos# -> url html_url""
-gists public_gists# -> https://gist.github.com/
-followers followers#
-following following#
+    private String userimage; // img avatar_url""
+    private String username; // name name""
+    private String bio; // bio bio""
+    private int repo; // repositories public_repos# -> url html_url""
+    private int gist; // gists public_gists# -> https://gist.github.com/
+    private int ufollowers; // followers followers#
+    private int ufollowing; // following following#
+    private String repoName;  // repo full_name"" (e.g. chrissetiana/acdss_ || name"" (e.g. acdss)
+    private String repoLanguage; // language language""
+    private String repoLink; // https://api.github.com/users/chrissetiana/repos
 
-this is for each repo:
-https://api.github.com/users/chrissetiana/repos
-repo full_name"" (e.g. chrissetiana/acdss_ || name"" (e.g. acdss)
-language language""
-
- */
-
-    private String userimage;
-    private String username;
-    private String bio;
-    private int repo;
-    private int gist;
-    private int ufollowers;
-    private int ufollowing;
-    private String repoName;
-    private String repoLanguage;
-    private String repoLink;
-
-    public UserActivity(String userimage, String username, String bio, int repo, int gist, int ufollowers, int ufollowing, String repoName, String repoLanguage, String repoLink) {
+    UserActivity(String userimage, String username, String bio, int repo, int gist, int ufollowers, int ufollowing, String repoName, String repoLanguage, String repoLink) {
         this.userimage = userimage;
         this.username = username;
         this.bio = bio;
