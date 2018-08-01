@@ -17,6 +17,6 @@
     <string name="btn_desc">Search</string>
     <string name="img_desc">user image</string>
 
-    <string name="no_result">No data found.</string>
+    <string name="no_result">No matches found.</string>
     <string name="no_conn">No internet connection.</string>
 </resources>
