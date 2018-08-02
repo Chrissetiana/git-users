@@ -26,7 +26,7 @@ public class UserAdapter extends ArrayAdapter<UserActivity> {
         View view = convertView;
 
         if (view == null) {
-            view = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_2, parent, false);
+            view = LayoutInflater.from(getContext()).inflate(R.layout.activity_layout, parent, false);
         }
 
         UserActivity current = getItem(position);
@@ -56,12 +56,6 @@ public class UserAdapter extends ArrayAdapter<UserActivity> {
 
         TextView following = view.findViewById(R.id.user_following);
         following.setText(current.getUfollowing());
-
-        TextView repoName = view.findViewById(android.R.id.text1);
-        repoName.setText(current.getRepoName());
-
-        TextView repoLang = view.findViewById(android.R.id.text2);
-        repoLang.setText(current.getRepoLanguage());
 
         return view;
     }

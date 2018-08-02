@@ -1,6 +1,9 @@
 package com.chrissetiana.gitusers;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,13 +14,17 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    UserAdapter adapter;
+    UserAdapter userAdapter;
+    RepoAdapter repoAdapter;
+    TextView emptyText;
+    View progressBar;
     private String source = "https://api.github.com/users/";
 
     @Override
@@ -25,15 +32,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        adapter = new UserAdapter(this, new ArrayList<UserActivity>());
+        ListView userList = findViewById(R.id.list_result);
+        userAdapter = new UserAdapter(this, new ArrayList<UserActivity>());
+        userList.setAdapter(userAdapter);
 
-        ListView list = findViewById(R.id.list_repo);
-        list.setAdapter(adapter);
+        ListView repoList = findViewById(R.id.list_repo);
+        repoAdapter = new RepoAdapter(this, new ArrayList<UserActivity>());
+        repoList.setAdapter(repoAdapter);
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        repoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                UserActivity current = adapter.getItem(position);
+                UserActivity current = repoAdapter.getItem(position);
                 assert current != null;
 
                 Uri uri = Uri.parse(current.getRepoLink());
@@ -46,15 +56,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        emptyText = findViewById(R.id.list_empty);
+        userList.setEmptyView(emptyText);
+
+        progressBar = findViewById(R.id.list_progress);
+        progressBar.setVisibility(View.GONE);
+
         ImageButton searchButton = findViewById(R.id.search_button);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 EditText searchText = findViewById(R.id.search_text);
-                String searchQuery = source + searchText.toString().trim();
+                String searchQuery = source + searchText.getText().toString().trim();
 
                 UserAsyncTask task = new UserAsyncTask();
                 task.execute(searchQuery);
+
+                progressBar.setVisibility(View.VISIBLE);
 
                 Log.d("MainActivity", searchQuery);
             }
@@ -65,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected UserActivity doInBackground(String... strings) {
-            if(strings[0] == null) {
+            if (strings[0] == null) {
                 return null;
             }
 
@@ -74,7 +92,24 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(UserActivity userActivity) {
-            super.onPostExecute(userActivity);
+            progressBar.setVisibility(View.VISIBLE);
+            userAdapter.clear();
+            repoAdapter.clear();
+
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+            if (networkInfo != null && networkInfo.isConnected()) {
+                if (userActivity != null && !userActivity.isEmpty()) {
+                    userAdapter.addAll();
+                    repoAdapter.addAll();
+                } else {
+                    emptyText.setText(getString(R.string.no_result));
+                }
+            } else {
+                progressBar.setVisibility(View.GONE);
+                emptyText.setText(getString(R.string.no_conn));
+            }
         }
     }
 }

@@ -48,7 +48,7 @@ public class UserQuery {
     private static String buildHttp(URL url) throws IOException {
         String response = "";
 
-        if(url == null) {
+        if (url == null) {
             return response;
         }
 
@@ -62,11 +62,11 @@ public class UserQuery {
             connection.setReadTimeout(10000);
             connection.connect();
 
-            if(connection.getResponseCode() == 200) {
+            if (connection.getResponseCode() == 200) {
                 stream = connection.getInputStream();
                 response = readStream(stream);
             } else {
-                Log.e("UserQuery","Error code: " + connection.getResponseCode());
+                Log.e("UserQuery", "Error code: " + connection.getResponseCode());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -75,7 +75,7 @@ public class UserQuery {
                 connection.disconnect();
             }
 
-            if(stream != null) {
+            if (stream != null) {
                 stream.close();
             }
         }
@@ -84,23 +84,23 @@ public class UserQuery {
     }
 
     private static String readStream(InputStream stream) throws IOException {
-            StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
 
-            if(stream != null) {
-                InputStreamReader streamReader = new InputStreamReader(stream, Charset.forName("UTF-8"));
-                BufferedReader reader = new BufferedReader(streamReader);
-                String line = reader.readLine();
-                while (line != null) {
-                    builder.append(line);
-                    line = reader.readLine();
-                }
+        if (stream != null) {
+            InputStreamReader streamReader = new InputStreamReader(stream, Charset.forName("UTF-8"));
+            BufferedReader reader = new BufferedReader(streamReader);
+            String line = reader.readLine();
+            while (line != null) {
+                builder.append(line);
+                line = reader.readLine();
             }
-            return builder.toString();
+        }
+        return builder.toString();
     }
 
 
     private static UserActivity getJSONData(String source) {
-        if(TextUtils.isEmpty(source)) {
+        if (TextUtils.isEmpty(source)) {
             return null;
         }
 
@@ -112,14 +112,16 @@ public class UserQuery {
             String bio = object.optString("bio");
             int repo = object.optInt("public_repos");
             int gist = object.optInt("public_gists");
-            int followers = object.getInt("followers");
-            int following = object.getInt("following");
+            int followers = object.optInt("followers");
+            int following = object.optInt("following");
 
             new UserActivity(image, name, bio, repo, gist, followers, following);
 
-            String repoName = object.getString("full_name");
-            String repoLanguage = object.getString("language");
-            String repoUrl = object.getString("html_url");
+            String repoName = object.optString("full_name");
+            String repoLanguage = object.optString("language");
+            String repoUrl = object.optString("html_url");
+
+            new UserActivity(repoName, repoLanguage, repoUrl);
 
         } catch (JSONException e) {
             e.printStackTrace();
