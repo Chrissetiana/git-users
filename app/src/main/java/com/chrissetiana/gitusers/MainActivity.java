@@ -1,13 +1,17 @@
 package com.chrissetiana.gitusers;
 
+import android.app.LoaderManager;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.content.Loader;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,20 +23,25 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderCallbacks<String> {
 
+    private static final String SOURCE = "https://api.github.com/users/";
+    private static final int LOADER_ID = 1;
     UserAdapter userAdapter;
     RepoAdapter repoAdapter;
+    ListView userList;
+    EditText editText;
     TextView emptyText;
     View progressBar;
-    private String source = "https://api.github.com/users/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ListView userList = findViewById(R.id.list_result);
+        editText = findViewById(R.id.search_text);
+
+        userList = findViewById(R.id.list_result);
         userAdapter = new UserAdapter(this, new ArrayList<UserActivity>());
         userList.setAdapter(userAdapter);
 
@@ -66,50 +75,81 @@ public class MainActivity extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText searchText = findViewById(R.id.search_text);
-                String searchQuery = source + searchText.getText().toString().trim();
-
-                UserAsyncTask task = new UserAsyncTask();
-                task.execute(searchQuery);
-
-                progressBar.setVisibility(View.VISIBLE);
-
-                Log.d("MainActivity", searchQuery);
+                loadQuery();
             }
         });
+
+        getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
-    private class UserAsyncTask extends AsyncTask<String, Void, UserActivity> {
+    @NonNull
+    @Override
+    public Loader<String> onCreateLoader(int i, @Nullable final Bundle bundle) {
+        String searchQuery = SOURCE + editText.getText().toString().trim();
+        return new UserLoader(this, searchQuery);
+    }
 
-        @Override
-        protected UserActivity doInBackground(String... strings) {
-            if (strings[0] == null) {
-                return null;
-            }
+    @Override
+    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
+        progressBar.setVisibility(View.INVISIBLE);
+        if (data == null) {
+            showError();
+        } else {
+            loadData();
+            showData(data);
+        }
+    }
 
-            return UserQuery.fetchData(strings[0]);
+    @Override
+    public void onLoaderReset(@NonNull Loader<String> loader) {
+    }
+
+    private void loadQuery() {
+        Bundle bundle = new Bundle();
+        LoaderManager loaderManager = getLoaderManager();
+        Loader<String> loader = loaderManager.getLoader(LOADER_ID);
+        if (loader == null) {
+            loaderManager.initLoader(LOADER_ID, bundle, this);
+        } else {
+            loaderManager.restartLoader(LOADER_ID, bundle, this);
+        }
+    }
+
+    private void loadData() {
+        // update ui here or use adapter?
+    }
+
+    private void showData(String data) {
+        userList.setVisibility(View.VISIBLE);
+        emptyText.setVisibility(View.INVISIBLE);
+    }
+
+    private void showError() {
+        userList.setVisibility(View.INVISIBLE);
+        emptyText.setVisibility(View.VISIBLE);
+    }
+
+    class UserLoader extends AsyncTaskLoader<String> {
+        String str;
+
+        UserLoader(Context context, String source) {
+            super(context);
+            str = source;
         }
 
         @Override
-        protected void onPostExecute(UserActivity userActivity) {
+        protected void onStartLoading() {
             progressBar.setVisibility(View.VISIBLE);
-            userAdapter.clear();
-            repoAdapter.clear();
+            forceLoad();
+        }
 
-            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-            if (networkInfo != null && networkInfo.isConnected()) {
-                if (userActivity != null && !userActivity.isEmpty()) {
-                    userAdapter.addAll();
-                    repoAdapter.addAll();
-                } else {
-                    emptyText.setText(getString(R.string.no_result));
-                }
-            } else {
-                progressBar.setVisibility(View.GONE);
-                emptyText.setText(getString(R.string.no_conn));
+        @Nullable
+        @Override
+        public String loadInBackground() {
+            if (str == null || TextUtils.isEmpty(str)) {
+                return null;
             }
+            return UserQuery.fetchData(str);
         }
     }
 }

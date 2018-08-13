@@ -19,7 +19,7 @@ public class UserQuery {
 
     private final static String TAG = UserQuery.class.getSimpleName();
 
-    public static UserActivity fetchData(String src) {
+    public static String fetchData(String src) {
         URL url = buildUrl(src);
         String response = null;
 
@@ -99,7 +99,7 @@ public class UserQuery {
     }
 
 
-    private static UserActivity getJSONData(String source) {
+    private static String getJSONData(String source) {
         if (TextUtils.isEmpty(source)) {
             return null;
         }
@@ -117,11 +117,11 @@ public class UserQuery {
 
             new UserActivity(image, name, bio, repo, gist, followers, following);
 
-            String repoName = object.optString("full_name");
+           /* String repoName = object.optString("full_name");
             String repoLanguage = object.optString("language");
             String repoUrl = object.optString("html_url");
 
-            new UserActivity(repoName, repoLanguage, repoUrl);
+            new UserActivity(repoName, repoLanguage, repoUrl);*/
 
         } catch (JSONException e) {
             e.printStackTrace();
