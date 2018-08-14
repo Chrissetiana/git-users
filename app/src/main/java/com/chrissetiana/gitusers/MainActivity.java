@@ -1,12 +1,13 @@
 package com.chrissetiana.gitusers;
 
+import android.annotation.SuppressLint;
 import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
-import android.content.Intent;
 import android.content.Loader;
-import android.net.Uri;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,17 +15,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity implements LoaderCallbacks<String> {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     private static final String SOURCE = "https://api.github.com/users/";
     private static final int LOADER_ID = 1;
     UserAdapter userAdapter;
@@ -42,72 +41,42 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<S
         editText = findViewById(R.id.search_text);
 
         userList = findViewById(R.id.list_result);
-        userAdapter = new UserAdapter(this, new ArrayList<UserActivity>());
-        userList.setAdapter(userAdapter);
-
-        ListView repoList = findViewById(R.id.list_repo);
-        repoAdapter = new RepoAdapter(this, new ArrayList<UserActivity>());
-        repoList.setAdapter(repoAdapter);
-
-        repoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                UserActivity current = repoAdapter.getItem(position);
-                assert current != null;
-
-                Uri uri = Uri.parse(current.getRepoLink());
-
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-                Toast.makeText(MainActivity.this, "Redirecting to online repository", Toast.LENGTH_SHORT).show();
-
-                Log.d("MainActivity", "Redirecting to " + uri.toString());
-            }
-        });
 
         emptyText = findViewById(R.id.list_empty);
         userList.setEmptyView(emptyText);
 
         progressBar = findViewById(R.id.list_progress);
-        progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.INVISIBLE);
 
         ImageButton searchButton = findViewById(R.id.search_button);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadQuery();
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                assert connectivityManager != null;
+                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                if ((networkInfo != null && networkInfo.isConnected())) {
+                    loadQuery();
+                    Log.d(TAG, "Search started");
+                } else {
+                    emptyText.setText(getString(R.string.no_conn));
+                }
             }
         });
 
-        getLoaderManager().initLoader(LOADER_ID, null, this);
-    }
-
-    @NonNull
-    @Override
-    public Loader<String> onCreateLoader(int i, @Nullable final Bundle bundle) {
-        String searchQuery = SOURCE + editText.getText().toString().trim();
-        return new UserLoader(this, searchQuery);
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
-        progressBar.setVisibility(View.INVISIBLE);
-        if (data == null) {
-            showError();
-        } else {
-            loadData();
-            showData(data);
-        }
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<String> loader) {
+        // getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     private void loadQuery() {
+        String searchQuery = SOURCE + editText.getText().toString().trim();
+
         Bundle bundle = new Bundle();
+        bundle.putString("query", searchQuery);
+
         LoaderManager loaderManager = getLoaderManager();
         Loader<String> loader = loaderManager.getLoader(LOADER_ID);
+
         if (loader == null) {
             loaderManager.initLoader(LOADER_ID, bundle, this);
         } else {
@@ -115,41 +84,53 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<S
         }
     }
 
-    private void loadData() {
-        // update ui here or use adapter?
-    }
-
-    private void showData(String data) {
+    private void loadData(String data) {
+        Toast.makeText(this, "The loader returned " + data, Toast.LENGTH_LONG).show();
+        Log.d(TAG, data);
         userList.setVisibility(View.VISIBLE);
         emptyText.setVisibility(View.INVISIBLE);
     }
 
-    private void showError() {
-        userList.setVisibility(View.INVISIBLE);
-        emptyText.setVisibility(View.VISIBLE);
+    @SuppressLint("StaticFieldLeak")
+    @NonNull
+    @Override
+    public Loader<String> onCreateLoader(int i, @Nullable final Bundle bundle) {
+        return new AsyncTaskLoader<String>(this) {
+            @Override
+            protected void onStartLoading() {
+                if (bundle == null) {
+                    return;
+                }
+                progressBar.setVisibility(View.VISIBLE);
+                forceLoad();
+            }
+
+            @Nullable
+            @Override
+            public String loadInBackground() {
+                String str = bundle.getString("query");
+                if (str == null || TextUtils.isEmpty(str)) {
+                    return null;
+                }
+                Log.d(TAG, str);
+                return UserQuery.fetchData(str);
+            }
+        };
     }
 
-    class UserLoader extends AsyncTaskLoader<String> {
-        String str;
-
-        UserLoader(Context context, String source) {
-            super(context);
-            str = source;
+    @Override
+    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
+        progressBar.setVisibility(View.INVISIBLE);
+        if (data == null) {
+            userList.setVisibility(View.INVISIBLE);
+            emptyText.setVisibility(View.VISIBLE);
+            emptyText.setText(getString(R.string.no_result));
+        } else {
+            loadData(data);
         }
+    }
 
-        @Override
-        protected void onStartLoading() {
-            progressBar.setVisibility(View.VISIBLE);
-            forceLoad();
-        }
-
-        @Nullable
-        @Override
-        public String loadInBackground() {
-            if (str == null || TextUtils.isEmpty(str)) {
-                return null;
-            }
-            return UserQuery.fetchData(str);
-        }
+    @Override
+    public void onLoaderReset(@NonNull Loader<String> loader) {
     }
 }
