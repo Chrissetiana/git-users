@@ -1,23 +1,23 @@
 package com.chrissetiana.gitusers;
 
-import java.util.ArrayList;
+import android.util.Log;
 
-public class UserActivity extends ArrayList {
+public class UserActivity {
 
     // https://api.github.com/users/chrissetiana
     private String userimage; // avatar_url""
     private String username; // name""
     private String bio; // bio""
-    private int repo; // public_repos#
-    private int gist; // public_gists#
-    private int ufollowers; // followers#
-    private int ufollowing; // following#
+    private String repo; // public_repos#
+    private String gist; // public_gists#
+    private String ufollowers; // followers#
+    private String ufollowing; // following#
     // https://api.github.com/users/chrissetiana/repos
     private String repoName;  // full_name"" (e.g. chrissetiana/acdss_ || name"" (e.g. acdss)
     private String repoLanguage; // language""
     private String repoLink; // html_url""
 
-    UserActivity(String userimage, String username, String bio, int repo, int gist, int ufollowers, int ufollowing) {
+    UserActivity(String userimage, String username, String bio, String repo, String gist, String ufollowers, String ufollowing) {
         this.userimage = userimage;
         this.username = username;
         this.bio = bio;
@@ -25,12 +25,7 @@ public class UserActivity extends ArrayList {
         this.gist = gist;
         this.ufollowers = ufollowers;
         this.ufollowing = ufollowing;
-    }
-
-    public UserActivity(String repoName, String repoLanguage, String repoLink) {
-        this.repoName = repoName;
-        this.repoLanguage = repoLanguage;
-        this.repoLink = repoLink;
+        Log.d("UserActivity", "Data received here" + "\n" + userimage + "\n" + username + "\n" + bio + "\n" + repo + "\n" + gist + "\n" + ufollowers + "\n" + ufollowing);
     }
 
     public String getUserimage() {
@@ -45,31 +40,19 @@ public class UserActivity extends ArrayList {
         return bio;
     }
 
-    public int getRepo() {
-        return repo;
+    public String getRepo() {
+        return "Repositories: " + repo;
     }
 
-    public int getGist() {
-        return gist;
+    public String getGist() {
+        return "Gists: " + gist;
     }
 
-    public int getUfollowers() {
-        return ufollowers;
+    public String getUfollowers() {
+        return "Followers: " + ufollowers;
     }
 
-    public int getUfollowing() {
-        return ufollowing;
-    }
-
-    public String getRepoName() {
-        return repoName;
-    }
-
-    public String getRepoLanguage() {
-        return repoLanguage;
-    }
-
-    public String getRepoLink() {
-        return repoLink;
+    public String getUfollowing() {
+        return "Following: " + ufollowing;
     }
 }

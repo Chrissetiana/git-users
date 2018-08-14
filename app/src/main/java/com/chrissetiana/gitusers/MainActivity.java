@@ -19,34 +19,35 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements LoaderCallbacks<String> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<UserActivity>> {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String SOURCE = "https://api.github.com/users/";
     private static final int LOADER_ID = 1;
-    UserAdapter userAdapter;
     RepoAdapter repoAdapter;
-    ListView userList;
-    EditText editText;
+    ListView searchResult;
+    EditText searchText;
     TextView emptyText;
     View progressBar;
+    private UserAdapter userAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        editText = findViewById(R.id.search_text);
+        searchText = findViewById(R.id.search_text);
+        searchResult = findViewById(R.id.search_result);
 
-        userList = findViewById(R.id.list_result);
+        userAdapter = new UserAdapter(this, new ArrayList<UserActivity>());
+        searchResult.setAdapter(userAdapter);
 
         emptyText = findViewById(R.id.list_empty);
-        userList.setEmptyView(emptyText);
-
         progressBar = findViewById(R.id.list_progress);
-        progressBar.setVisibility(View.INVISIBLE);
 
         ImageButton searchButton = findViewById(R.id.search_button);
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -57,8 +58,9 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<S
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
                 if ((networkInfo != null && networkInfo.isConnected())) {
-                    loadQuery();
                     Log.d(TAG, "Search started");
+                    userAdapter.clear();
+                    loadQuery();
                 } else {
                     emptyText.setText(getString(R.string.no_conn));
                 }
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<S
     }
 
     private void loadQuery() {
-        String searchQuery = SOURCE + editText.getText().toString().trim();
+        String searchQuery = SOURCE + searchText.getText().toString().trim();
 
         Bundle bundle = new Bundle();
         bundle.putString("query", searchQuery);
@@ -82,20 +84,22 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<S
         } else {
             loaderManager.restartLoader(LOADER_ID, bundle, this);
         }
+
+        Log.d(TAG, "Bundle: " + bundle.toString());
     }
 
-    private void loadData(String data) {
-        Toast.makeText(this, "The loader returned " + data, Toast.LENGTH_LONG).show();
-        Log.d(TAG, data);
-        userList.setVisibility(View.VISIBLE);
+    private void loadData(List<UserActivity> data) {
+        Log.d(TAG, "loadData received " + data);
+        searchResult.setVisibility(View.VISIBLE);
         emptyText.setVisibility(View.INVISIBLE);
+        userAdapter.addAll(data);
     }
 
     @SuppressLint("StaticFieldLeak")
     @NonNull
     @Override
-    public Loader<String> onCreateLoader(int i, @Nullable final Bundle bundle) {
-        return new AsyncTaskLoader<String>(this) {
+    public Loader<List<UserActivity>> onCreateLoader(int i, @Nullable final Bundle bundle) {
+        return new AsyncTaskLoader<List<UserActivity>>(this) {
             @Override
             protected void onStartLoading() {
                 if (bundle == null) {
@@ -105,32 +109,36 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<S
                 forceLoad();
             }
 
-            @Nullable
             @Override
-            public String loadInBackground() {
+            public List<UserActivity> loadInBackground() {
                 String str = bundle.getString("query");
+                Log.d(TAG, "Key received: " + str);
                 if (str == null || TextUtils.isEmpty(str)) {
                     return null;
                 }
-                Log.d(TAG, str);
-                return UserQuery.fetchData(str);
+                Log.d(TAG, "Load in bg started for " + str);
+                List<UserActivity> activity = UserQuery.fetchData(str);
+                Log.d(TAG, "Load in bg returned " + activity);
+                return activity;
             }
         };
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
+    public void onLoadFinished(@NonNull Loader<List<UserActivity>> loader, List<UserActivity> data) {
         progressBar.setVisibility(View.INVISIBLE);
         if (data == null) {
-            userList.setVisibility(View.INVISIBLE);
+            Log.d(TAG, "Loader finished: no data received");
+            searchResult.setVisibility(View.INVISIBLE);
             emptyText.setVisibility(View.VISIBLE);
             emptyText.setText(getString(R.string.no_result));
         } else {
             loadData(data);
+            Log.d(TAG, "Loader finished: data received");
         }
     }
 
     @Override
-    public void onLoaderReset(@NonNull Loader<String> loader) {
+    public void onLoaderReset(@NonNull Loader<List<UserActivity>> loader) {
     }
 }

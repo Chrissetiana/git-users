@@ -14,12 +14,14 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserQuery {
 
     private final static String TAG = UserQuery.class.getSimpleName();
 
-    public static String fetchData(String src) {
+    public static List<UserActivity> fetchData(String src) {
         URL url = buildUrl(src);
         String response = null;
 
@@ -37,6 +39,7 @@ public class UserQuery {
 
         try {
             url = new URL(str);
+            Log.d(TAG, "URL: " + url.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return null;
@@ -66,7 +69,7 @@ public class UserQuery {
                 stream = connection.getInputStream();
                 response = readStream(stream);
             } else {
-                Log.e("UserQuery", "Error code: " + connection.getResponseCode());
+                Log.e(TAG, "Error code: " + connection.getResponseCode());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -99,33 +102,31 @@ public class UserQuery {
     }
 
 
-    private static String getJSONData(String source) {
+    private static List<UserActivity> getJSONData(String source) {
         if (TextUtils.isEmpty(source)) {
             return null;
         }
 
+        List<UserActivity> users = new ArrayList<>();
+
         try {
             JSONObject object = new JSONObject(source);
 
-            String image = object.optString("name");
-            String name = object.optString("avatar_url");
+            String image = object.optString("avatar_url");
+            String name = object.optString("name");
             String bio = object.optString("bio");
-            int repo = object.optInt("public_repos");
-            int gist = object.optInt("public_gists");
-            int followers = object.optInt("followers");
-            int following = object.optInt("following");
+            String repo = object.optString("public_repos");
+            String gist = object.optString("public_gists");
+            String followers = object.optString("followers");
+            String following = object.optString("following");
 
-            new UserActivity(image, name, bio, repo, gist, followers, following);
-
-           /* String repoName = object.optString("full_name");
-            String repoLanguage = object.optString("language");
-            String repoUrl = object.optString("html_url");
-
-            new UserActivity(repoName, repoLanguage, repoUrl);*/
+            UserActivity user = new UserActivity(image, name, bio, repo, gist, followers, following);
+            Log.d(TAG, "You've reached JSON method" + "\n" + image + "\n" + name + "\n" + bio + "\n" + repo + "\n" + gist + "\n" + followers + "\n" + following);
+            users.add(user);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
+        return users;
     }
 }

@@ -3,6 +3,7 @@ package com.chrissetiana.gitusers;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ public class UserAdapter extends ArrayAdapter<UserActivity> {
 
     UserAdapter(Activity context, ArrayList<UserActivity> list) {
         super(context, 0, list);
+        Log.d("UserAdapter", "Data received in adapter");
     }
 
     @NonNull

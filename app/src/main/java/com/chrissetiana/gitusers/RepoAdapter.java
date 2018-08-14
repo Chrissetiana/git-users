@@ -30,10 +30,8 @@ public class RepoAdapter extends ArrayAdapter<UserActivity> {
         assert current != null;
 
         TextView repoName = view.findViewById(android.R.id.text1);
-        repoName.setText(current.getRepoName());
 
         TextView repoLang = view.findViewById(android.R.id.text2);
-        repoLang.setText(current.getRepoLanguage());
 
         return view;
     }
