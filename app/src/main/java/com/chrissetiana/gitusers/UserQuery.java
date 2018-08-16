@@ -19,8 +19,6 @@ import java.util.List;
 
 public class UserQuery {
 
-    private final static String TAG = UserQuery.class.getSimpleName();
-
     public static List<UserActivity> fetchData(String src) {
         URL url = buildUrl(src);
         String response = null;
@@ -39,7 +37,6 @@ public class UserQuery {
 
         try {
             url = new URL(str);
-            Log.d(TAG, "URL: " + url.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return null;
@@ -69,7 +66,7 @@ public class UserQuery {
                 stream = connection.getInputStream();
                 response = readStream(stream);
             } else {
-                Log.e(TAG, "Error code: " + connection.getResponseCode());
+                Log.e("UserQuery", "Error code: " + connection.getResponseCode());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -121,7 +118,6 @@ public class UserQuery {
             String following = object.optString("following");
 
             UserActivity user = new UserActivity(image, name, bio, repo, gist, followers, following);
-            Log.d(TAG, "You've reached JSON method" + "\n" + image + "\n" + name + "\n" + bio + "\n" + repo + "\n" + gist + "\n" + followers + "\n" + following);
             users.add(user);
 
         } catch (JSONException e) {

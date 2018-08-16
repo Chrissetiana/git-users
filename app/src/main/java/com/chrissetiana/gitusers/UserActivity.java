@@ -1,7 +1,5 @@
 package com.chrissetiana.gitusers;
 
-import android.util.Log;
-
 public class UserActivity {
 
     // https://api.github.com/users/chrissetiana
@@ -25,7 +23,6 @@ public class UserActivity {
         this.gist = gist;
         this.ufollowers = ufollowers;
         this.ufollowing = ufollowing;
-        Log.d("UserActivity", "Data received here" + "\n" + userimage + "\n" + username + "\n" + bio + "\n" + repo + "\n" + gist + "\n" + ufollowers + "\n" + ufollowing);
     }
 
     public String getUserimage() {
