@@ -28,6 +28,7 @@
 
             <TextView
                 android:id="@+id/user_name"
+                android:textSize="?android:textAppearanceLarge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/inner"
@@ -86,10 +87,16 @@
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/list_repo"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/list_repo"
+            android:layout_width="match_parent"
+            android:textSize="?android:textAppearanceMedium"
+            android:layout_height="wrap_content" />
+
+    </ScrollView>
 
 </LinearLayout>

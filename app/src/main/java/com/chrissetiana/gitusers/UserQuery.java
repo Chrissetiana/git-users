@@ -3,6 +3,7 @@ package com.chrissetiana.gitusers;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,17 +20,21 @@ import java.util.List;
 
 public class UserQuery {
 
-    public static List<UserActivity> fetchData(String src) {
-        URL url = buildUrl(src);
-        String response = null;
+    public static List<UserActivity> fetchData(String userStr, String repoStr) {
+        URL userUrl = buildUrl(userStr);
+        URL repoUrl = buildUrl(repoStr);
+
+        String userData = null;
+        String repoData = null;
 
         try {
-            response = buildHttp(url);
+            userData = buildHttp(userUrl);
+            repoData = buildHttp(repoUrl);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return getJSONData(response);
+        return getJSONData(userData, repoData);
     }
 
     private static URL buildUrl(String str) {
@@ -99,30 +104,44 @@ public class UserQuery {
     }
 
 
-    private static List<UserActivity> getJSONData(String source) {
-        if (TextUtils.isEmpty(source)) {
+    private static List<UserActivity> getJSONData(String userUrl, String repoUrl) {
+        if (TextUtils.isEmpty(userUrl)) {
             return null;
         }
 
         List<UserActivity> users = new ArrayList<>();
+        UserActivity user;
 
         try {
-            JSONObject object = new JSONObject(source);
+            JSONObject gitUser = new JSONObject(userUrl);
 
-            String image = object.optString("avatar_url");
-            String name = object.optString("name");
-            String bio = object.optString("bio");
-            String repo = object.optString("public_repos");
-            String gist = object.optString("public_gists");
-            String followers = object.optString("followers");
-            String following = object.optString("following");
+            String image = gitUser.optString("avatar_url");
+            String name = gitUser.optString("name");
+            String bio = gitUser.optString("bio");
+            String repo = gitUser.optString("public_repos");
+            String gist = gitUser.optString("public_gists");
+            String followers = gitUser.optString("followers");
+            String following = gitUser.optString("following");
 
-            UserActivity user = new UserActivity(image, name, bio, repo, gist, followers, following);
+            JSONArray gitRepo = new JSONArray(repoUrl);
+            ArrayList<String> repoList = new ArrayList<>();
+
+            for (int i = 0; i < gitRepo.length(); i++) {
+                JSONObject repoDetail = gitRepo.getJSONObject(i);
+                String repoName = repoDetail.optString("full_name");
+                String repoLang = repoDetail.optString("language");
+                String repoLink = repoDetail.optString("html_url");
+
+                repoList.add(repoName);
+            }
+
+            user = new UserActivity(image, name, bio, repo, gist, followers, following, repoList);
             users.add(user);
-
+            Log.d("UserQuery", "You've reached JSON method" + "\n" + image + "\n" + name + "\n" + bio + "\n" + repo + "\n" + gist + "\n" + followers + "\n" + following + "\n" + repoList);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
         return users;
     }
 }

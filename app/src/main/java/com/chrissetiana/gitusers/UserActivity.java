@@ -1,5 +1,7 @@
 package com.chrissetiana.gitusers;
 
+import java.util.ArrayList;
+
 public class UserActivity {
 
     // https://api.github.com/users/chrissetiana
@@ -11,11 +13,11 @@ public class UserActivity {
     private String ufollowers; // followers#
     private String ufollowing; // following#
     // https://api.github.com/users/chrissetiana/repos
-    private String repoName;  // full_name"" (e.g. chrissetiana/acdss_ || name"" (e.g. acdss)
+    private ArrayList<String> repoName;  // full_name"" (e.g. chrissetiana/acdss_ || name"" (e.g. acdss)
     private String repoLanguage; // language""
     private String repoLink; // html_url""
 
-    UserActivity(String userimage, String username, String bio, String repo, String gist, String ufollowers, String ufollowing) {
+    UserActivity(String userimage, String username, String bio, String repo, String gist, String ufollowers, String ufollowing, ArrayList<String> repoName) {
         this.userimage = userimage;
         this.username = username;
         this.bio = bio;
@@ -23,6 +25,7 @@ public class UserActivity {
         this.gist = gist;
         this.ufollowers = ufollowers;
         this.ufollowing = ufollowing;
+        this.repoName = repoName;
     }
 
     public String getUserimage() {
@@ -51,5 +54,17 @@ public class UserActivity {
 
     public String getUfollowing() {
         return "Following: " + ufollowing;
+    }
+
+    public ArrayList<String> getRepoName() {
+        return repoName;
+    }
+
+    public String getRepoLanguage() {
+        return repoLanguage;
+    }
+
+    public String getRepoLink() {
+        return repoLink;
     }
 }
