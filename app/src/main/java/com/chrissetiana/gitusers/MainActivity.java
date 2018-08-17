@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -34,7 +36,9 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     EditText searchText;
     TextView emptyText;
     View progressBar;
-    private UserAdapter userAdapter;
+    RecyclerView recycler;
+    UserAdapter userAdapter;
+    RepoAdapter repoAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +50,12 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
         userAdapter = new UserAdapter(this, new ArrayList<UserActivity>());
         searchResult.setAdapter(userAdapter);
+
+        recycler = findViewById(R.id.list_repo);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recycler.setLayoutManager(layoutManager);
+        recycler.setHasFixedSize(true);
+        recycler.setAdapter(repoAdapter);
 
         emptyText = findViewById(R.id.list_empty);
         progressBar = findViewById(R.id.list_progress);
