@@ -13,8 +13,8 @@
 
         <ImageView
             android:id="@+id/user_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="@dimen/image_size"
+            android:layout_height="@dimen/image_size"
             android:layout_gravity="center"
             android:layout_margin="@dimen/inner"
             android:contentDescription="@string/img_desc"
@@ -28,14 +28,14 @@
 
             <TextView
                 android:id="@+id/user_name"
-                android:textSize="?android:textAppearanceLarge"
                 android:layout_width="match_parent"
+                android:textAppearance="?android:textAppearanceLarge"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/inner"
                 tools:text="@string/hint_name" />
 
             <TextView
                 android:id="@+id/user_bio"
+                android:textAppearance="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/inner"
@@ -48,14 +48,16 @@
 
                 <TextView
                     android:id="@+id/user_repo"
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/nonexistent"
+                    android:textAppearance="?android:textAppearanceSmall"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     tools:text="@string/hint_repo" />
 
                 <TextView
                     android:id="@+id/user_gist"
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/nonexistent"
+                    android:textAppearance="?android:textAppearanceSmall"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     tools:text="@string/hint_gist" />
@@ -69,15 +71,17 @@
 
                 <TextView
                     android:id="@+id/user_followers"
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/nonexistent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textAppearance="?android:textAppearanceSmall"
                     tools:text="@string/hint_followers" />
 
                 <TextView
                     android:id="@+id/user_following"
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/nonexistent"
                     android:layout_height="wrap_content"
+                    android:textAppearance="?android:textAppearanceSmall"
                     android:layout_weight="1"
                     tools:text="@string/hint_following" />
 
@@ -93,8 +97,9 @@
 
         <TextView
             android:id="@+id/list_repo"
+            android:layout_margin="@dimen/inner"
+            android:textAppearance="?android:textAppearanceMedium"
             android:layout_width="match_parent"
-            android:textSize="?android:textAppearanceMedium"
             android:layout_height="wrap_content" />
 
     </ScrollView>
