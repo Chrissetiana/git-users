@@ -20,12 +20,14 @@ import java.util.List;
 
 public class UserQuery {
 
+    private static String userData, repoData;
+
     public static List<UserActivity> fetchData(String userStr, String repoStr) {
         URL userUrl = buildUrl(userStr);
         URL repoUrl = buildUrl(repoStr);
 
-        String userData = null;
-        String repoData = null;
+        userData = null;
+        repoData = null;
 
         try {
             userData = buildHttp(userUrl);
@@ -113,24 +115,22 @@ public class UserQuery {
         UserActivity user;
 
         try {
-            JSONObject gitUser = new JSONObject(userUrl);
+            String image = getUserData("avatar_url");
+            String name = getUserData("name");
+            String bio = getUserData("bio");
+            String repo = getUserData("public_repos");
+            String gist = getUserData("public_gists");
+            String followers = getUserData("followers");
+            String following = getUserData("following");
 
-            String image = gitUser.optString("avatar_url");
-            String name = gitUser.optString("name");
-            String bio = gitUser.optString("bio");
-            String repo = gitUser.optString("public_repos");
-            String gist = gitUser.optString("public_gists");
-            String followers = gitUser.optString("followers");
-            String following = gitUser.optString("following");
-
-            JSONArray gitRepo = new JSONArray(repoUrl);
+//            JSONArray gitRepo = new JSONArray(repoUrl);
             ArrayList<String> repoList = new ArrayList<>();
 
-            for (int i = 0; i < gitRepo.length(); i++) {
-                JSONObject repoDetail = gitRepo.getJSONObject(i);
-                String repoName = repoDetail.optString("full_name");
-                String repoLang = repoDetail.optString("language");
-                String repoLink = repoDetail.optString("html_url");
+            for (int i = 0; i < String.valueOf(repo).length(); i++) {
+//                JSONObject repoDetail = gitRepo.getJSONObject(i);
+                String repoName = getRepoData(i, "full_name");
+                /*String repoLang = repoDetail.optString("language");
+                String repoLink = repoDetail.optString("html_url");*/
 
                 repoList.add(repoName);
             }
@@ -143,5 +143,16 @@ public class UserQuery {
         }
 
         return users;
+    }
+
+    private static String getUserData(String key) throws JSONException {
+        JSONObject gitUser = new JSONObject(userData);
+        return gitUser.optString(key);
+    }
+
+    private static String getRepoData(int i, String key) throws JSONException {
+        JSONArray gitRepo = new JSONArray(repoData);
+        JSONObject repoDetail = gitRepo.getJSONObject(i);
+        return repoDetail.optString(key);
     }
 }
