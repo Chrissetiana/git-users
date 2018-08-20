@@ -18,46 +18,78 @@ public class UserActivity {
     private String repoLink; // html_url""
 
     UserActivity(String userimage, String username, String bio, String repo, String gist, String ufollowers, String ufollowing, ArrayList<String> repoName) {
-        this.userimage = userimage;
-        this.username = username;
-        this.bio = bio;
-        this.repo = repo;
-        this.gist = gist;
-        this.ufollowers = ufollowers;
-        this.ufollowing = ufollowing;
-        this.repoName = repoName;
+        setUserimage(userimage);
+        setUsername(username);
+        setBio(bio);
+        setRepo(repo);
+        setGist(gist);
+        setFollowers(ufollowers);
+        setFollowing(ufollowing);
+        setRepoName(repoName);
     }
 
     public String getUserimage() {
         return userimage;
     }
 
+    public void setUserimage(String userimage) {
+        this.userimage = userimage;
+    }
+
     public String getUsername() {
         return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getBio() {
         return bio;
     }
 
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
     public String getRepo() {
         return "Repositories: " + repo;
+    }
+
+    public void setRepo(String repo) {
+        this.repo = repo;
     }
 
     public String getGist() {
         return "Gists: " + gist;
     }
 
+    public void setGist(String gist) {
+        this.gist = gist;
+    }
+
     public String getUfollowers() {
         return "Followers: " + ufollowers;
+    }
+
+    public void setFollowers(String ufollowers) {
+        this.ufollowers = ufollowers;
     }
 
     public String getUfollowing() {
         return "Following: " + ufollowing;
     }
 
+    public void setFollowing(String ufollowing) {
+        this.ufollowing = ufollowing;
+    }
+
     public ArrayList<String> getRepoName() {
         return repoName;
+    }
+
+    public void setRepoName(ArrayList<String> repoName) {
+        this.repoName = repoName;
     }
 
     public String getRepoLanguage() {
