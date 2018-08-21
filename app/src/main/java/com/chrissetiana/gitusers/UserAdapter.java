@@ -57,13 +57,6 @@ public class UserAdapter extends ArrayAdapter<UserActivity> {
         TextView following = view.findViewById(R.id.user_following);
         following.setText(current.getUfollowing());
 
-        TextView repoName = view.findViewById(R.id.list_repo);
-        StringBuilder repoList = new StringBuilder();
-        for (int i = 0; i < current.getRepoName().size(); i++) {
-            repoList.append(current.getRepoName().get(i)).append("\n");
-        }
-        repoName.setText(repoList);
-
         return view;
     }
 }
