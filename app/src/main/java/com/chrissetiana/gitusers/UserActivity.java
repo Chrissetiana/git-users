@@ -1,6 +1,6 @@
 package com.chrissetiana.gitusers;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class UserActivity {
 
@@ -13,11 +13,11 @@ public class UserActivity {
     private String ufollowers; // followers#
     private String ufollowing; // following#
     // https://api.github.com/users/chrissetiana/repos
-    private ArrayList<String> repoName;  // full_name"" (e.g. chrissetiana/acdss_ || name"" (e.g. acdss)
+    private List<String> repoName;  // full_name"" (e.g. chrissetiana/acdss_ || name"" (e.g. acdss)
     private String repoLanguage; // language""
     private String repoLink; // html_url""
 
-    UserActivity(String userimage, String username, String bio, String repo, String gist, String ufollowers, String ufollowing, ArrayList<String> repoName) {
+    UserActivity(String userimage, String username, String bio, String repo, String gist, String ufollowers, String ufollowing, List<String> repoName) {
         setUserimage(userimage);
         setUsername(username);
         setBio(bio);
@@ -32,7 +32,7 @@ public class UserActivity {
         return userimage;
     }
 
-    public void setUserimage(String userimage) {
+    private void setUserimage(String userimage) {
         this.userimage = userimage;
     }
 
@@ -40,7 +40,7 @@ public class UserActivity {
         return username;
     }
 
-    public void setUsername(String username) {
+    private void setUsername(String username) {
         this.username = username;
     }
 
@@ -48,7 +48,7 @@ public class UserActivity {
         return bio;
     }
 
-    public void setBio(String bio) {
+    private void setBio(String bio) {
         this.bio = bio;
     }
 
@@ -56,7 +56,7 @@ public class UserActivity {
         return "Repositories: " + repo;
     }
 
-    public void setRepo(String repo) {
+    private void setRepo(String repo) {
         this.repo = repo;
     }
 
@@ -64,7 +64,7 @@ public class UserActivity {
         return "Gists: " + gist;
     }
 
-    public void setGist(String gist) {
+    private void setGist(String gist) {
         this.gist = gist;
     }
 
@@ -72,7 +72,7 @@ public class UserActivity {
         return "Followers: " + ufollowers;
     }
 
-    public void setFollowers(String ufollowers) {
+    private void setFollowers(String ufollowers) {
         this.ufollowers = ufollowers;
     }
 
@@ -84,11 +84,11 @@ public class UserActivity {
         this.ufollowing = ufollowing;
     }
 
-    public ArrayList<String> getRepoName() {
+    public List<String> getRepoName() {
         return repoName;
     }
 
-    public void setRepoName(ArrayList<String> repoName) {
+    private void setRepoName(List<String> repoName) {
         this.repoName = repoName;
     }
 

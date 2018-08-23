@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,19 +20,20 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<UserActivity>> {
+public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<UserActivity>>, RepoAdapter.ListItemClickListener {
 
     private static final String USER_SOURCE = "https://api.github.com/users/";
     private static final String REPO_SOURCE = "/repos";
     private static final String USER_QUERY = "user_query";
     private static final String REPO_QUERY = "repo_query";
     private static final int LOADER_ID = 1;
-    ListView searchResult;
     EditText searchText;
+    ListView searchResult;
     TextView emptyText;
     View progressBar;
     RecyclerView recycler;
@@ -47,18 +47,19 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
         searchText = findViewById(R.id.search_text);
         searchResult = findViewById(R.id.search_result);
+        emptyText = findViewById(R.id.list_empty);
+        progressBar = findViewById(R.id.list_progress);
+        recycler = findViewById(R.id.list_repo);
 
         userAdapter = new UserAdapter(this, new ArrayList<UserActivity>());
         searchResult.setAdapter(userAdapter);
 
-        recycler = findViewById(R.id.list_repo);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recycler.setLayoutManager(layoutManager);
-        recycler.setHasFixedSize(true);
-        recycler.setAdapter(repoAdapter);
+//        repoAdapter = new RepoAdapter(activity, this);
+//        recycler.setAdapter(repoAdapter);
 
-        emptyText = findViewById(R.id.list_empty);
-        progressBar = findViewById(R.id.list_progress);
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+//        recycler.setLayoutManager(layoutManager);
+//        recycler.setHasFixedSize(true);
 
         ImageButton searchButton = findViewById(R.id.search_button);
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -96,12 +97,6 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         }
     }
 
-    private void loadData(List<UserActivity> data) {
-        searchResult.setVisibility(View.VISIBLE);
-        emptyText.setVisibility(View.INVISIBLE);
-        userAdapter.addAll(data);
-    }
-
     @SuppressLint("StaticFieldLeak")
     @NonNull
     @Override
@@ -120,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
             public List<UserActivity> loadInBackground() {
                 String user = bundle.getString(USER_QUERY);
                 String repo = bundle.getString(REPO_QUERY);
+
                 if (user == null || TextUtils.isEmpty(user) || repo == null || TextUtils.isEmpty(repo)) {
                     return null;
                 }
@@ -133,16 +129,24 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     @Override
     public void onLoadFinished(@NonNull Loader<List<UserActivity>> loader, List<UserActivity> data) {
         progressBar.setVisibility(View.INVISIBLE);
+
         if (data == null) {
             searchResult.setVisibility(View.INVISIBLE);
             emptyText.setVisibility(View.VISIBLE);
             emptyText.setText(getString(R.string.no_result));
         } else {
-            loadData(data);
+            searchResult.setVisibility(View.VISIBLE);
+            emptyText.setVisibility(View.INVISIBLE);
+            userAdapter.addAll(data);
         }
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<List<UserActivity>> loader) {
+    }
+
+    @Override
+    public void onListItemClick(int clickedItemIndex) {
+        Toast.makeText(this, "Item clicked!", Toast.LENGTH_SHORT).show();
     }
 }

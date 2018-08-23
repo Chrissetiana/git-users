@@ -7,12 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder> {
 
-    private int items;
+    private List<UserActivity> users;
+    private ListItemClickListener listener;
 
-    RepoAdapter(int numItems) {
-        items = numItems;
+    public RepoAdapter(List<UserActivity> activity, ListItemClickListener clickListener) {
+        users = activity;
+        listener = clickListener;
     }
 
     @NonNull
@@ -24,12 +28,13 @@ class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull RepoViewHolder holder, int position) {
-        holder.bind(position);
+        UserActivity user = users.get(position);
+        holder.bind(user);
     }
 
     @Override
     public int getItemCount() {
-        return items;
+        return users.size();
     }
 
     @Override
@@ -37,7 +42,11 @@ class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder> {
         return android.R.layout.simple_list_item_2;
     }
 
-    class RepoViewHolder extends RecyclerView.ViewHolder {
+    public interface ListItemClickListener {
+        void onListItemClick(int clickedItemIndex);
+    }
+
+    class RepoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView repoName;
         TextView repoLang;
 
@@ -47,14 +56,18 @@ class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder> {
             repoLang = view.findViewById(android.R.id.text2);
         }
 
-        void bind(int position) {
-            UserActivity activity = null;
-
-            StringBuilder repoList = new StringBuilder();
+        void bind(UserActivity position) {
+            /*StringBuilder repoList = new StringBuilder();
             for (int i = 0; i < activity.getRepoName().size(); i++) {
                 repoList.append(activity.getRepoName().get(i)).append("\n");
             }
-            repoName.setText(repoList);
+            repoName.setText(repoList);*/
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            listener.onListItemClick(position);
         }
     }
 }

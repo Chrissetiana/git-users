@@ -102,6 +102,7 @@ public class UserQuery {
                 line = reader.readLine();
             }
         }
+
         return builder.toString();
     }
 
@@ -112,7 +113,6 @@ public class UserQuery {
         }
 
         List<UserActivity> users = new ArrayList<>();
-        UserActivity user;
 
         try {
             String image = getUserData("avatar_url");
@@ -123,19 +123,32 @@ public class UserQuery {
             String followers = getUserData("followers");
             String following = getUserData("following");
 
-//            JSONArray gitRepo = new JSONArray(repoUrl);
-            ArrayList<String> repoList = new ArrayList<>();
+            JSONArray gitRepo = new JSONArray(repoUrl);
+            int repoNum = gitRepo.length();
 
-            for (int i = 0; i < String.valueOf(repo).length(); i++) {
-//                JSONObject repoDetail = gitRepo.getJSONObject(i);
-                String repoName = getRepoData(i, "full_name");
-                /*String repoLang = repoDetail.optString("language");
-                String repoLink = repoDetail.optString("html_url");*/
+            List<String> repoList = new ArrayList<>();
 
-                repoList.add(repoName);
+            for (int i = 0; i < repoNum; i++) {
+                JSONObject repoDetail = gitRepo.getJSONObject(i);
+                // String repoName = getRepoData(i, "full_name");
+
+                String repoName = repoDetail.optString("full_name");
+                String repoLang = repoDetail.optString("language");
+                String repoLink = repoDetail.optString("html_url");
+
+                List<String> repositories = new ArrayList<>();
+                repositories.add(repoName);
+                repositories.add(repoLang);
+                repositories.add(repoLink);
+
+                String[] repos = repositories.toArray(new String[repositories.size()]);
+
+                for (int j = 0; j < repositories.size(); j++) {
+                    repoList.add(repos[j]);
+                }
             }
 
-            user = new UserActivity(image, name, bio, repo, gist, followers, following, repoList);
+            UserActivity user = new UserActivity(image, name, bio, repo, gist, followers, following, repoList);
             users.add(user);
             Log.d("UserQuery", "You've reached JSON method" + "\n" + image + "\n" + name + "\n" + bio + "\n" + repo + "\n" + gist + "\n" + followers + "\n" + following + "\n" + repoList);
         } catch (JSONException e) {
@@ -150,9 +163,9 @@ public class UserQuery {
         return gitUser.optString(key);
     }
 
-    private static String getRepoData(int i, String key) throws JSONException {
+    /*private static String getRepoData(int i, String key) throws JSONException {
         JSONArray gitRepo = new JSONArray(repoData);
         JSONObject repoDetail = gitRepo.getJSONObject(i);
         return repoDetail.optString(key);
-    }
+    }*/
 }

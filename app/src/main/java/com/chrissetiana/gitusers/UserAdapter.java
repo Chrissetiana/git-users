@@ -12,11 +12,11 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class UserAdapter extends ArrayAdapter<UserActivity> {
 
-    UserAdapter(Activity context, ArrayList<UserActivity> list) {
+    UserAdapter(Activity context, List<UserActivity> list) {
         super(context, 0, list);
     }
 
