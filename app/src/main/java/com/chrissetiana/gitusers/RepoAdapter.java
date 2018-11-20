@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder> {
@@ -14,8 +15,8 @@ class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder> {
     private List<UserActivity> users;
     private ListItemClickListener listener;
 
-    public RepoAdapter(List<UserActivity> activity, ListItemClickListener clickListener) {
-        users = activity;
+    public RepoAdapter(ListItemClickListener clickListener) {
+        users = new ArrayList<>();
         listener = clickListener;
     }
 
@@ -42,6 +43,10 @@ class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder> {
         return android.R.layout.simple_list_item_2;
     }
 
+    public void setData(List<UserActivity> data) {
+        users = data;
+    }
+
     public interface ListItemClickListener {
         void onListItemClick(int clickedItemIndex);
     }
@@ -57,6 +62,8 @@ class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder> {
         }
 
         void bind(UserActivity position) {
+            // repoName.setText(position.getRepoName());
+            repoLang.setText(position.getRepoLanguage());
             /*StringBuilder repoList = new StringBuilder();
             for (int i = 0; i < activity.getRepoName().size(); i++) {
                 repoList.append(activity.getRepoName().get(i)).append("\n");

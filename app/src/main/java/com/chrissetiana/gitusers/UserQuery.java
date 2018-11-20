@@ -118,19 +118,18 @@ public class UserQuery {
             String image = getUserData("avatar_url");
             String name = getUserData("name");
             String bio = getUserData("bio");
-            String repo = getUserData("public_repos");
-            String gist = getUserData("public_gists");
+            String repos = getUserData("public_repos");
+            String gists = getUserData("public_gists");
             String followers = getUserData("followers");
             String following = getUserData("following");
 
             JSONArray gitRepo = new JSONArray(repoUrl);
-            int repoNum = gitRepo.length();
 
             List<String> repoList = new ArrayList<>();
 
+            int repoNum = Integer.parseInt(repos);
             for (int i = 0; i < repoNum; i++) {
                 JSONObject repoDetail = gitRepo.getJSONObject(i);
-                // String repoName = getRepoData(i, "full_name");
 
                 String repoName = repoDetail.optString("full_name");
                 String repoLang = repoDetail.optString("language");
@@ -141,16 +140,22 @@ public class UserQuery {
                 repositories.add(repoLang);
                 repositories.add(repoLink);
 
-                String[] repos = repositories.toArray(new String[repositories.size()]);
+                int repoLen = repositories.size();
+                String[] repo = repositories.toArray(new String[repoLen]);
 
-                for (int j = 0; j < repositories.size(); j++) {
-                    repoList.add(repos[j]);
+                List<String> list = new ArrayList<>();
+
+                for (int j = 0; j < repoLen; j++) {
+                    list.add(repo[j]);
                 }
+
+                 repoList = list;
+                 Log.d("UserQuery", "REPOSITORY: " + repoList);
             }
 
-            UserActivity user = new UserActivity(image, name, bio, repo, gist, followers, following, repoList);
+            UserActivity user = new UserActivity(image, name, bio, repos, gists, followers, following, repoList);
             users.add(user);
-            Log.d("UserQuery", "You've reached JSON method" + "\n" + image + "\n" + name + "\n" + bio + "\n" + repo + "\n" + gist + "\n" + followers + "\n" + following + "\n" + repoList);
+            Log.d("UserQuery", "You've reached JSON method" + "\n" + image + "\n" + name + "\n" + bio + "\n" + repos + "\n" + gists + "\n" + followers + "\n" + following + "\n" + repoList);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -164,6 +169,8 @@ public class UserQuery {
     }
 
     /*private static String getRepoData(int i, String key) throws JSONException {
+        // String repoName = getRepoData(i, "full_name");
+
         JSONArray gitRepo = new JSONArray(repoData);
         JSONObject repoDetail = gitRepo.getJSONObject(i);
         return repoDetail.optString(key);

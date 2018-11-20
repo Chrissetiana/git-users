@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -54,9 +55,9 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         userAdapter = new UserAdapter(this, new ArrayList<UserActivity>());
         searchResult.setAdapter(userAdapter);
 
-//        repoAdapter = new RepoAdapter(activity, this);
+//        repoAdapter = new RepoAdapter(this);
 //        recycler.setAdapter(repoAdapter);
-
+//
 //        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 //        recycler.setLayoutManager(layoutManager);
 //        recycler.setHasFixedSize(true);
@@ -138,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
             searchResult.setVisibility(View.VISIBLE);
             emptyText.setVisibility(View.INVISIBLE);
             userAdapter.addAll(data);
+            repoAdapter.setData(data);
         }
     }
 
