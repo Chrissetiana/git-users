@@ -1,4 +1,4 @@
-package com.chrissetiana.gitusers;
+package com.chrissetiana.gitusers.ui;
 
 import android.annotation.SuppressLint;
 import android.app.LoaderManager;
@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,6 +21,12 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.chrissetiana.gitusers.R;
+import com.chrissetiana.gitusers.data.model.UserActivity;
+import com.chrissetiana.gitusers.data.remote.UserQuery;
+import com.chrissetiana.gitusers.util.RepoAdapter;
+import com.chrissetiana.gitusers.util.UserAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +38,13 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private static final String USER_QUERY = "user_query";
     private static final String REPO_QUERY = "repo_query";
     private static final int LOADER_ID = 1;
-    EditText searchText;
-    ListView searchResult;
-    TextView emptyText;
-    View progressBar;
-    RecyclerView recycler;
-    UserAdapter userAdapter;
-    RepoAdapter repoAdapter;
+    private EditText searchText;
+    private ListView searchResult;
+    private TextView emptyText;
+    private View progressBar;
+    private RecyclerView recycler;
+    private UserAdapter userAdapter;
+    private RepoAdapter repoAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
             @Override
             public List<UserActivity> loadInBackground() {
+                assert bundle != null;
                 String user = bundle.getString(USER_QUERY);
                 String repo = bundle.getString(REPO_QUERY);
 

@@ -1,4 +1,4 @@
-package com.chrissetiana.gitusers;
+package com.chrissetiana.gitusers.data.model;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class UserActivity {
     private String repoLanguage; // language""
     private String repoLink; // html_url""
 
-    UserActivity(String userimage, String username, String bio, String repo, String gist, String ufollowers, String ufollowing, List<String> repoName) {
+    public UserActivity(String userimage, String username, String bio, String repo, String gist, String ufollowers, String ufollowing, List<String> repoName) {
         setUserimage(userimage);
         setUsername(username);
         setBio(bio);
@@ -80,7 +80,7 @@ public class UserActivity {
         return "Following: " + ufollowing;
     }
 
-    public void setFollowing(String ufollowing) {
+    private void setFollowing(String ufollowing) {
         this.ufollowing = ufollowing;
     }
 

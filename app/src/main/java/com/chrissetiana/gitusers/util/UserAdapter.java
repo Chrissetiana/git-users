@@ -1,4 +1,4 @@
-package com.chrissetiana.gitusers;
+package com.chrissetiana.gitusers.util;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
@@ -10,13 +10,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chrissetiana.gitusers.R;
+import com.chrissetiana.gitusers.data.model.UserActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class UserAdapter extends ArrayAdapter<UserActivity> {
 
-    UserAdapter(Activity context, List<UserActivity> list) {
+    public UserAdapter(Activity context, List<UserActivity> list) {
         super(context, 0, list);
     }
 

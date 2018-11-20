@@ -1,4 +1,4 @@
-package com.chrissetiana.gitusers;
+package com.chrissetiana.gitusers.util;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -7,13 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.chrissetiana.gitusers.data.model.UserActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
-class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder> {
+public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder> {
 
     private List<UserActivity> users;
-    private ListItemClickListener listener;
+    private final ListItemClickListener listener;
 
     public RepoAdapter(ListItemClickListener clickListener) {
         users = new ArrayList<>();
